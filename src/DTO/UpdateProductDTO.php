@@ -2,6 +2,15 @@
 
 namespace App\DTO;
 
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Constraints\Choice;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\Type;
+use Symfony\Component\Validator\Constraints\Range;
+use Symfony\Component\Validator\Constraints\PositiveOrZero;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use App\Enums\ProductStatus;
+
 class UpdateProductDTO
 {
     #[Assert\Length(max: 255)]

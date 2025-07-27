@@ -9,8 +9,7 @@ use Symfony\Component\Validator\Constraints\Type;
 use Symfony\Component\Validator\Constraints\Range;
 use Symfony\Component\Validator\Constraints\PositiveOrZero;
 use Symfony\Component\Validator\Constraints\NotBlank;
-
-use App\Enum\ProductStatus;
+use App\Enums\ProductStatus;
 
 class CreateProductDTO
 {
@@ -35,6 +34,6 @@ class CreateProductDTO
     public array $attributes;
 
     #[Assert\NotBlank]
-    #[Assert\Choice(['available', 'out_of_stock', 'archived'])]
+    #[Assert\Choice(callback: [ProductStatus::class, 'values'])]
     public string $status;
 }
