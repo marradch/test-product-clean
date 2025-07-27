@@ -100,6 +100,9 @@ DB_PASS=123456
 │   ├── Entity/            # Сущности (Product и др.)
 │   ├── Repository/        # Работа с БД
 │   └── Enum/              # Перечисления (ENUM)
+├── tests/
+│   ├── Integration/
+│   └── Unit/
 ├── composer.json
 ├── docker-compose.yml
 └── README.md
