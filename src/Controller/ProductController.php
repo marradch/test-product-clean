@@ -1,0 +1,227 @@
+<?php
+
+namespace App\Controller;
+
+use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\Serializer\SerializerInterface;
+use App\Repository\ProductRepository;
+use Psr\Http\Message\ServerRequestInterface;
+use App\DTO\CreateProductDTO;
+use App\DTO\ProductResponseDTO;
+use App\DTO\UpdateProductDTO;
+use Laminas\Diactoros\Response\JsonResponse;
+use Psr\Http\Message\ResponseInterface;
+use App\Entity\Product;
+
+class ProductController
+{
+    public function __construct(
+        private ProductRepository $repository,
+        private ValidatorInterface $validator,
+        private SerializerInterface $serializer,
+    ) {}
+
+    public function store(ServerRequestInterface $request): ResponseInterface
+    {
+        try {
+            $body = $request->getBody()->getContents();
+            $data = json_decode($body, true);
+            if ($data === null && json_last_error() !== JSON_ERROR_NONE) {
+                return new JsonResponse(['errors' => 'Invalid JSON'], 400);
+            }
+
+            $dto = $this->serializer->denormalize($data, CreateProductDTO::class);
+
+            $errors = $this->validator->validate($dto);
+            if (count($errors) > 0) {
+                return new JsonResponse(['errors' => (string)$errors], 400);
+            }
+
+            $product = new Product(null, $dto->name, $dto->price, $dto->status, $dto->category_id, $dto->attributes);
+            $id = $this->repository->save($product);
+
+            return new JsonResponse(['id' => $id], 201);
+        } catch (\Throwable $e) {
+            return new JsonResponse(['errors' => $e->getMessage()], 500);
+        }
+    }
+
+    public function show(ServerRequestInterface $request, array $route_vars = []): ResponseInterface
+    {
+        try {
+            $id = $route_vars['id'];
+
+            if ($id <= 0) {
+                return new JsonResponse(['errors' => 'Invalid ID'], 400);
+            }
+
+            $productData = $this->repository->findById($id);
+
+            if (!$productData) {
+                return new JsonResponse(['errors' => 'Product not found'], 404);
+            }
+
+            $dto = new ProductResponseDTO(
+                id: (int)$productData['id'],
+                    name: $productData['name'],
+                    price: (float)$productData['price'],
+                    status: $productData['status'] ?? null,
+                    category_id: (int)$productData['category_id'],
+                    category_name: $productData['category_name'] ?? null,
+                    attributes: $productData['attributes'] ?? [],
+                    created_at: $productData['created_at']
+                );
+
+            return new JsonResponse($dto, 200);
+        } catch (\Throwable $e) {
+            return new JsonResponse(['errors' => $e->getMessage()], 500);
+        }
+    }
+
+    public function update(ServerRequestInterface $request, array $route_vars = []): ResponseInterface
+    {
+        try {
+            $id = $route_vars['id'];
+
+            if ($id <= 0) {
+                return new JsonResponse(['errors' => 'Invalid ID'], 400);
+            }
+
+            $existing = $this->repository->findById($id);
+            //echo '<pre>'; var_dump($existing); die;
+            if (!$existing) {
+                return new JsonResponse(['errors' => 'Product not found'], 404);
+            }
+
+            $body = $request->getBody()->getContents();
+            $data = json_decode($body, true);
+            if ($data === null && json_last_error() !== JSON_ERROR_NONE) {
+                return new JsonResponse(['errors' => 'Invalid JSON'], 400);
+            }
+
+            $dto = $this->serializer->denormalize($data, UpdateProductDTO::class);
+
+            $errors = $this->validator->validate($dto);
+            if (count($errors) > 0) {
+                return new JsonResponse(['errors' => (string)$errors], 400);
+            }
+
+            $updatedProduct = new Product(
+                id: $id,
+                    name: $dto->name ?? $existing['name'],
+                    price: $dto->price ?? (float)$existing['price'],
+                    status: $dto->status ?? $existing['status'],
+                    categoryId: $dto->category_id ?? $existing['category_id'],
+                    attributes: $dto->attributes ?? $existing['attributes']
+                );
+
+            $this->repository->update($updatedProduct);
+
+            return new JsonResponse(['message' => 'Product updated'], 200);
+
+        } catch (\Throwable $e) {
+            return new JsonResponse(['errors' => $e->getMessage()], 500);
+        }
+    }
+
+    public function destroy(ServerRequestInterface $request, array $route_vars = []): ResponseInterface
+    {
+        try {
+            $id = $route_vars['id'];
+
+            if ($id <= 0) {
+                return new JsonResponse(['errors' => 'Invalid ID'], 400);
+            }
+
+            $product = $this->repository->findById($id);
+
+            if (!$product) {
+                return new JsonResponse(['errors' => 'Product not found'], 404);
+            }
+
+            $this->repository->delete($id);
+
+            return new JsonResponse(['message' => 'Product deleted'], 200);
+        } catch (\Throwable $e) {
+            return new JsonResponse(['errors' => $e->getMessage()], 500);
+        }
+    }
+
+    public function findAllWithFilters(array $filters): array
+    {
+        $query = "
+            SELECT p.id, p.name, p.price, p.status, p.created_at,
+                   c.id AS category_id, c.name AS category_name
+            FROM products p
+            LEFT JOIN categories c ON p.category_id = c.id
+            WHERE 1=1
+        ";
+
+        $params = [];
+
+        if (!empty($filters['category_id'])) {
+            $query .= " AND p.category_id = :category_id";
+            $params['category_id'] = (int)$filters['category_id'];
+        }
+
+        if (!empty($filters['price_min'])) {
+            $query .= " AND p.price >= :price_min";
+            $params['price_min'] = (float)$filters['price_min'];
+        }
+
+        if (!empty($filters['price_max'])) {
+            $query .= " AND p.price <= :price_max";
+            $params['price_max'] = (float)$filters['price_max'];
+        }
+
+        $query .= " ORDER BY p.id DESC";
+
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute($params);
+        $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        foreach ($products as &$product) {
+            $stmtAttr = $this->pdo->prepare("
+                SELECT key, value FROM product_attributes WHERE product_id = :product_id
+            ");
+            $stmtAttr->execute(['product_id' => $product['id']]);
+
+            $attributes = [];
+            foreach ($stmtAttr->fetchAll(PDO::FETCH_ASSOC) as $attr) {
+                $attributes[$attr['key']] = $attr['value'];
+            }
+
+            $product['attributes'] = $attributes;
+        }
+
+        return $products;
+    }
+
+    public function index(ServerRequestInterface $request): ResponseInterface
+    {
+        try {
+            $filters = $request->getQueryParams();
+
+            $results = $this->repository->findAllWithFilters($filters);
+
+            $dtoList = [];
+
+            foreach ($results as $item) {
+                $dtoList[] = new ProductResponseDTO(
+                    id: $item['id'],
+                    name: $item['name'],
+                    price: (float)$item['price'],
+                    status: $item['status'],
+                    category_id: $item['category_id'],
+                    category_name: $item['category_name'],
+                    attributes: $item['attributes'],
+                    created_at: $item['created_at']
+                );
+            }
+
+            return new JsonResponse($dtoList, 200);
+        } catch (\Throwable $e) {
+            return new JsonResponse(['errors' => $e->getMessage()], 500);
+        }
+    }
+}

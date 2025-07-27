@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="aef3ef91-471e-4cb1-91ba-8a4d917afac4" name="Default Changelist" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ComposerSettings" synchronizationState="SYNCHRONIZE">
+    <pharConfigPath>$PROJECT_DIR$/composer.json</pharConfigPath>
+    <execution />
+  </component>
+  <component name="PhpWorkspaceProjectConfiguration">
+    <include_path>
+      <path value="$PROJECT_DIR$/vendor/psr/http-factory" />
+      <path value="$PROJECT_DIR$/vendor/psr/http-message" />
+      <path value="$PROJECT_DIR$/vendor/laminas/laminas-diactoros" />
+      <path value="$PROJECT_DIR$/vendor/symfony/deprecation-contracts" />
+      <path value="$PROJECT_DIR$/vendor/symfony/validator" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-mbstring" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-ctype" />
+      <path value="$PROJECT_DIR$/vendor/symfony/serializer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/translation-contracts" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-php83" />
+      <path value="$PROJECT_DIR$/vendor/nikic/fast-route" />
+      <path value="$PROJECT_DIR$/vendor/composer" />
+    </include_path>
+  </component>
+  <component name="ProjectId" id="30NCe4dyVpab9E3cGktkRcSIyyP" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="DatabaseDriversLRU" value="postgresql" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/DTO" />
+      <recent name="$PROJECT_DIR$/src" />
+      <recent name="$PROJECT_DIR$/public" />
+    </key>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="aef3ef91-471e-4cb1-91ba-8a4d917afac4" name="Default Changelist" comment="" />
+      <created>1753458735979</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1753458735979</updated>
+      <workItem from="1753458736992" duration="25448000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="584" y="382" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1753618815299">
+      <screen x="82" y="40" width="1838" height="1040" />
+    </state>
+    <state x="584" y="382" key="#com.intellij.execution.impl.EditConfigurationsDialog/82.40.1838.1040@82.40.1838.1040" timestamp="1753618815299" />
+    <state width="1221" height="204" key="GridCell.Tab.0.bottom" timestamp="1753634252564">
+      <screen x="82" y="40" width="1838" height="1040" />
+    </state>
+    <state width="1221" height="204" key="GridCell.Tab.0.bottom/82.40.1838.1040@82.40.1838.1040" timestamp="1753634252564" />
+    <state width="1221" height="204" key="GridCell.Tab.0.center" timestamp="1753634252564">
+      <screen x="82" y="40" width="1838" height="1040" />
+    </state>
+    <state width="1221" height="204" key="GridCell.Tab.0.center/82.40.1838.1040@82.40.1838.1040" timestamp="1753634252564" />
+    <state width="1221" height="204" key="GridCell.Tab.0.left" timestamp="1753634252564">
+      <screen x="82" y="40" width="1838" height="1040" />
+    </state>
+    <state width="1221" height="204" key="GridCell.Tab.0.left/82.40.1838.1040@82.40.1838.1040" timestamp="1753634252564" />
+    <state width="1221" height="204" key="GridCell.Tab.0.right" timestamp="1753634252564">
+      <screen x="82" y="40" width="1838" height="1040" />
+    </state>
+    <state width="1221" height="204" key="GridCell.Tab.0.right/82.40.1838.1040@82.40.1838.1040" timestamp="1753634252564" />
+    <state x="768" y="526" width="455" height="179" key="NewPhpFileDialog" timestamp="1753466841727">
+      <screen x="82" y="40" width="1838" height="1040" />
+    </state>
+    <state x="768" y="526" width="455" height="179" key="NewPhpFileDialog/82.40.1838.1040@82.40.1838.1040" timestamp="1753466841727" />
+    <state x="836" y="588" width="447" height="302" key="com.intellij.database.actions.DdlActions$DeleteProvider2$1" timestamp="1753619099814">
+      <screen x="82" y="40" width="1838" height="1040" />
+    </state>
+    <state x="836" y="588" width="447" height="302" key="com.intellij.database.actions.DdlActions$DeleteProvider2$1/82.40.1838.1040@82.40.1838.1040" timestamp="1753619099814" />
+    <state x="704" y="549" width="591" height="198" key="vcs.readOnlyHandler.ReadOnlyStatusDialog" timestamp="1753466396781">
+      <screen x="82" y="40" width="1838" height="1040" />
+    </state>
+    <state x="704" y="549" width="591" height="198" key="vcs.readOnlyHandler.ReadOnlyStatusDialog/82.40.1838.1040@82.40.1838.1040" timestamp="1753466396781" />
+  </component>
+</project>
