@@ -22,6 +22,7 @@ class UpdateProductDTO
     public ?float $price = null;
 
     #[Assert\Type('integer')]
+    #[Assert\Positive]
     public ?int $category_id = null;
 
     #[Assert\Choice(callback: [ProductStatus::class, 'values'])]

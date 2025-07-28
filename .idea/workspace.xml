@@ -54,7 +54,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1753458735979</updated>
-      <workItem from="1753458736992" duration="30285000" />
+      <workItem from="1753458736992" duration="33620000" />
     </task>
     <servers />
   </component>
@@ -90,6 +90,10 @@
       <screen x="82" y="40" width="1838" height="1040" />
     </state>
     <state x="836" y="588" width="447" height="302" key="com.intellij.database.actions.DdlActions$DeleteProvider2$1/82.40.1838.1040@82.40.1838.1040" timestamp="1753619099814" />
+    <state x="471" y="134" width="1050" height="933" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1753699185426">
+      <screen x="82" y="40" width="1838" height="1040" />
+    </state>
+    <state x="471" y="134" width="1050" height="933" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/82.40.1838.1040@82.40.1838.1040" timestamp="1753699185426" />
     <state x="704" y="549" width="591" height="198" key="vcs.readOnlyHandler.ReadOnlyStatusDialog" timestamp="1753466396781">
       <screen x="82" y="40" width="1838" height="1040" />
     </state>

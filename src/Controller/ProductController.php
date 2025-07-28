@@ -4,11 +4,9 @@ namespace App\Controller;
 
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\Serializer\SerializerInterface;
-use App\Repository\ProductRepository;
+use App\Repository\{ProductRepository,CategoryRepository};
 use Psr\Http\Message\ServerRequestInterface;
-use App\DTO\CreateProductDTO;
-use App\DTO\ProductResponseDTO;
-use App\DTO\UpdateProductDTO;
+use App\DTO\{CreateProductDTO,ProductResponseDTO,UpdateProductDTO};
 use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ResponseInterface;
 use App\Entity\Product;
@@ -17,6 +15,7 @@ class ProductController
 {
     public function __construct(
         private ProductRepository $repository,
+        private CategoryRepository $categoryRepository,
         private ValidatorInterface $validator,
         private SerializerInterface $serializer,
     ) {}
@@ -35,6 +34,10 @@ class ProductController
             $errors = $this->validator->validate($dto);
             if (count($errors) > 0) {
                 return new JsonResponse(['errors' => (string)$errors], 400);
+            }
+
+            if (!$this->categoryRepository->exists($dto->category_id)) {
+                return new JsonResponse(['errors' => 'Категория не найдена'], 400);
             }
 
             $product = new Product(null, $dto->name, $dto->price, $dto->status, $dto->category_id, $dto->attributes);
@@ -99,7 +102,15 @@ class ProductController
                 return new JsonResponse(['errors' => 'Invalid JSON'], 400);
             }
 
+            if (empty($data)) {
+                return new JsonResponse(['errors' => 'Empty update data'], 400);
+            }
+
             $dto = $this->serializer->denormalize($data, UpdateProductDTO::class);
+
+            if ((int) $dto->category_id > 0 && !$this->categoryRepository->exists($dto->category_id)) {
+                return new JsonResponse(['errors' => 'Категория не найдена'], 400);
+            }
 
             $errors = $this->validator->validate($dto);
             if (count($errors) > 0) {

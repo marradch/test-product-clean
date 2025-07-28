@@ -10,7 +10,7 @@ use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\PropertyInfo\Extractor\PhpDocExtractor;
-use App\Repository\ProductRepository;
+use App\Repository\{ProductRepository, CategoryRepository};
 use Dotenv\Dotenv;
 
 $dotenv = Dotenv::createImmutable(__DIR__ . '/../');
@@ -65,11 +65,6 @@ switch ($routeInfo[0]) {
         break;
 
     case FastRoute\Dispatcher::FOUND:
-        // Валидатор
-        $validator = Validation::createValidatorBuilder()
-            ->enableAttributeMapping()
-            ->getValidator();
-
         // Сериализатор
         $normalizers = [new ObjectNormalizer(null, null, null, new PhpDocExtractor())];
         $encoders = [new JsonEncoder()];
@@ -92,10 +87,16 @@ switch ($routeInfo[0]) {
         );
 
         $repository = new ProductRepository($pdo);
+        $categoryRepository = new CategoryRepository($pdo);
+
+        // Валидатор
+        $validator = Validation::createValidatorBuilder()
+            ->enableAttributeMapping()
+            ->getValidator();
 
         [$class, $method] = $routeInfo[1];
         $vars = $routeInfo[2];
-        $controller = new $class($repository, $validator, $serializer);
+        $controller = new $class($repository, $categoryRepository, $validator, $serializer);
         $response = $controller->$method($request, $vars);
         break;
 }

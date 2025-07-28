@@ -28,6 +28,7 @@ class CreateProductDTO
 
     #[Assert\NotBlank]
     #[Assert\Type('integer')]
+    #[Assert\Positive]
     public int $category_id;
 
     #[Assert\Type('array')]
