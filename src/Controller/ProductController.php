@@ -49,7 +49,7 @@ class ProductController
     public function show(ServerRequestInterface $request, array $route_vars = []): ResponseInterface
     {
         try {
-            $id = $route_vars['id'];
+            $id = (int) $route_vars['id'];
 
             if ($id <= 0) {
                 return new JsonResponse(['errors' => 'Invalid ID'], 400);
@@ -81,14 +81,14 @@ class ProductController
     public function update(ServerRequestInterface $request, array $route_vars = []): ResponseInterface
     {
         try {
-            $id = $route_vars['id'];
+            $id = (int) $route_vars['id'];
 
             if ($id <= 0) {
                 return new JsonResponse(['errors' => 'Invalid ID'], 400);
             }
 
             $existing = $this->repository->findById($id);
-            //echo '<pre>'; var_dump($existing); die;
+
             if (!$existing) {
                 return new JsonResponse(['errors' => 'Product not found'], 404);
             }
@@ -127,7 +127,7 @@ class ProductController
     public function destroy(ServerRequestInterface $request, array $route_vars = []): ResponseInterface
     {
         try {
-            $id = $route_vars['id'];
+            $id = (int) $route_vars['id'];
 
             if ($id <= 0) {
                 return new JsonResponse(['errors' => 'Invalid ID'], 400);
@@ -145,56 +145,6 @@ class ProductController
         } catch (\Throwable $e) {
             return new JsonResponse(['errors' => $e->getMessage()], 500);
         }
-    }
-
-    public function findAllWithFilters(array $filters): array
-    {
-        $query = "
-            SELECT p.id, p.name, p.price, p.status, p.created_at,
-                   c.id AS category_id, c.name AS category_name
-            FROM products p
-            LEFT JOIN categories c ON p.category_id = c.id
-            WHERE 1=1
-        ";
-
-        $params = [];
-
-        if (!empty($filters['category_id'])) {
-            $query .= " AND p.category_id = :category_id";
-            $params['category_id'] = (int)$filters['category_id'];
-        }
-
-        if (!empty($filters['price_min'])) {
-            $query .= " AND p.price >= :price_min";
-            $params['price_min'] = (float)$filters['price_min'];
-        }
-
-        if (!empty($filters['price_max'])) {
-            $query .= " AND p.price <= :price_max";
-            $params['price_max'] = (float)$filters['price_max'];
-        }
-
-        $query .= " ORDER BY p.id DESC";
-
-        $stmt = $this->pdo->prepare($query);
-        $stmt->execute($params);
-        $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        foreach ($products as &$product) {
-            $stmtAttr = $this->pdo->prepare("
-                SELECT key, value FROM product_attributes WHERE product_id = :product_id
-            ");
-            $stmtAttr->execute(['product_id' => $product['id']]);
-
-            $attributes = [];
-            foreach ($stmtAttr->fetchAll(PDO::FETCH_ASSOC) as $attr) {
-                $attributes[$attr['key']] = $attr['value'];
-            }
-
-            $product['attributes'] = $attributes;
-        }
-
-        return $products;
     }
 
     public function index(ServerRequestInterface $request): ResponseInterface
