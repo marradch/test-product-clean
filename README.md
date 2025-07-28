@@ -15,9 +15,9 @@ docker-compose up -d --build
 
 ## 🗃️ Миграции БД
 
+Выполнить запрос из файла перед началом работы
 ```bash
-docker exec -it app-php bash
-psql -U postgres -d app < /var/www/html/database/database.sql
+/database/database.sql
 ```
 
 ## 🌐 API эндпоинты
