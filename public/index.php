@@ -21,6 +21,7 @@ $required = ['DB_CONNECTION', 'DB_HOST', 'DB_PORT', 'DB_NAME', 'DB_USER', 'DB_PA
 foreach ($required as $key) {
     if (empty($_ENV[$key])) {
         $response = new JsonResponse(['error' => 'Missing required environment variable'], 500);
+        http_response_code($response->getStatusCode());
         echo $response->getBody();
         die;
     }
@@ -34,8 +35,6 @@ $request = ServerRequestFactory::fromGlobals(
     $_COOKIE,
     $_FILES
 );
-
-//echo '<pre>'; var_dump($_POST); die;
 
 // Настройка маршрутов
 $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
