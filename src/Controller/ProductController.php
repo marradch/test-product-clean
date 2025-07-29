@@ -10,6 +10,7 @@ use App\DTO\{CreateProductDTO,ProductResponseDTO,UpdateProductDTO};
 use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ResponseInterface;
 use App\Entity\Product;
+use App\Helper\ValidationErrorFormatter;
 
 class ProductController
 {
@@ -33,7 +34,9 @@ class ProductController
 
             $errors = $this->validator->validate($dto);
             if (count($errors) > 0) {
-                return new JsonResponse(['errors' => (string)$errors], 400);
+                return new JsonResponse([
+                    'errors' => ValidationErrorFormatter::format($errors)
+                ], 400);
             }
 
             if (!$this->categoryRepository->exists($dto->category_id)) {
@@ -114,7 +117,9 @@ class ProductController
 
             $errors = $this->validator->validate($dto);
             if (count($errors) > 0) {
-                return new JsonResponse(['errors' => (string)$errors], 400);
+                return new JsonResponse([
+                    'errors' => ValidationErrorFormatter::format($errors)
+                ], 400);
             }
 
             $updatedProduct = new Product(
